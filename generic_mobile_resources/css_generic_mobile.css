@@ -1,0 +1,74 @@
+#divHeader{
+    height: 10vh;
+    color: whitesmoke;
+    background-color: #AF272F;
+}
+
+#divMap{
+    height: 80vh;
+    background-color: whitesmoke;
+}
+
+#divFooter{
+    height: 10vh;
+    color: whitesmoke;
+    background-color: #AF272F;
+}
+
+#divCross{
+    z-index: 2000;
+    color: red;
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    margin-top:  -13px;
+    margin-left: -10px;
+}
+
+.btn {
+    margin-top: 20%;
+    line-height: 2px;
+}
+
+.fa {
+  color: #cf464e;
+}
+
+.container{
+    z-index: 2000;
+}
+
+h3{
+    text-align: center;
+    font-weight: bold;
+    margin-top: 5%;
+    margin-bottom: 0%;
+    font-size: 14px;
+}
+
+hr{
+    margin-bottom: 1%;
+    margin-top: 1%;
+}
+
+p{
+    text-align: center;
+}
+
+/* Modal Content */
+
+.modal{
+    z-index: 2001;
+    height: 90%;
+    widows: 100%;
+    display: none;
+    overflow-y: auto;
+    background-color: whitesmoke;
+    color: #AF272F;
+}
+
+.sub-header{
+    color: whitesmoke;
+    background-color: #AF272F;
+    padding: 3px;
+}
