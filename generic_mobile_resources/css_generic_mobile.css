@@ -25,10 +25,15 @@
     margin-left: -10px;
 }
 
-.btn {
+.btn-light {
     margin-top: 20%;
-    line-height: 2px;
 }
+
+.btn-warning {
+    margin-top: 10%;
+}
+
+
 
 .fa {
   color: #cf464e;
@@ -72,3 +77,28 @@ p{
     background-color: #AF272F;
     padding: 3px;
 }
+.setting-label{
+    margin-top: 8%;
+}
+
+    /*    Slider */
+
+input[type="range"] {
+    -webkit-appearance: none;
+    background-color: saddlebrown;
+    height: 10px;
+}
+
+input[type="range"]::-webkit-slider-thumb {
+    -webkit-appearance: none;
+    position: relative;
+    top: -1px;
+    z-index: 1;
+    width: 35px;
+    height: 35px;
+
+    -webkit-border-radius: 40px;
+    -moz-border-radius: 40px;
+    border-radius: 40px;
+    background-image: -webkit-gradient(linear, left top, left bottom, color-stop(0%,#aaa), color-stop(50%,saddlebrown), color-stop(100%,#aaa));
+}  
