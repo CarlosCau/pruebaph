@@ -124,6 +124,21 @@
                 
                 return currentYear+"-"+currentMonth+"-"+currentDay;
             }
+
+            function returnTimeFromUTC(val){
+                var currentDate = new Date(val);
+                
+                var currentHour = currentDate.getHours();
+                if (currentHour<10){currentHour="0"+currentHour}
+                
+                var currentMinute = currentDate.getMinutes();
+                if (currentMinute<10){currentMinute="0"+currentMinute};
+                
+                var currentSecond = currentDate.getSeconds();
+                if (currentSecond<10){currentSecond="0"+currentSecond};
+                
+                return currentHour+":"+currentMinute+":"+currentSecond;
+            }
             
             function returnFormData(inpClass) {
                 var objFormData={};
