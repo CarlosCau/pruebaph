@@ -30,6 +30,7 @@
         <script src="src/plugins/leaflet-providers.js"></script>
         <script src="src/plugins/leaflet.awesome-markers.min.js"></script>
         <script src="src/plugins/leaflet.markercluster.js"></script>
+        <script src="src/plugins/leaflet.geometryutil.js"></script>
         <script src="js/general_functions.js"></script>
         <script src="js/general_editing.js"></script>
         <script src="generic_mobile_resources/js_generic_mobile.js"></script>
@@ -75,26 +76,84 @@
         <div id="divInfo" class="modal">
             <div class="sub-header"><h3 class="text-center">Info</h3></div>
             <div id="info">
-                Info Content
+                <div class="col-xs-12"><h4 class="text-center">Current Pos (<span class="time_since_fix"></span>s &plusmn; <span class="info_cur_acc"></span>m)</h4></div>
+                <div class="col-xs-6">Latitude</div>
+                <div class="col-xs-6">Longitude</div>
+                <div class="col-xs-6">
+                    <input type="text" class="form-control" name="info_cur_lat" id="info_cur_lat" placeholder="Current Latitude" readonly>
+                </div>
+                <div class="col-xs-6">
+                    <input type="text" class="form-control" name="info_cur_lng" id="info_cur_lng" placeholder="Current Longitude" readonly>
+                </div>
+                <div class="col-xs-6">Altitude</div>
+                <div class="col-xs-6">Time</div>
+                <div class="col-xs-6">
+                    <input type="text" class="form-control" name="info_cur_alt" id="info_cur_alt" placeholder="Current Altitude" readonly>
+                </div>
+                <div class="col-xs-6">
+                    <input type="text" class="form-control" name="info_cur_tm" id="info_cur_tm" placeholder="Current Time" readonly>
+                </div>
+                
+                <div class="col-xs-12"><h4 class="text-center">Previous Pos</h4></div>
+                <div class="col-xs-6">Latitude</div>
+                <div class="col-xs-6">Longitude</div>
+                <div class="col-xs-6">
+                    <input type="text" class="form-control" name="info_prv_lat" id="info_prv_lat" placeholder="Previous Latitude" readonly>
+                </div>
+                <div class="col-xs-6">
+                    <input type="text" class="form-control" name="info_prv_lng" id="info_prv_lng" placeholder="Previous Longitude" readonly>
+                </div>
+                <div class="col-xs-6">Altitude</div>
+                <div class="col-xs-6">Time</div>
+                <div class="col-xs-6">
+                    <input type="text" class="form-control" name="info_prv_alt" id="info_prv_alt" placeholder="Previous Altitude" readonly>
+                </div>
+                <div class="col-xs-6">
+                    <input type="text" class="form-control" name="info_prv_tm" id="info_prv_tm" placeholder="Previous Time" readonly>
+                </div>   
+                    
+                <div class="col-xs-12"><h4 class="text-center">Difference</h4></div>
+                <div class="col-xs-6">Distance</div>
+                <div class="col-xs-6">Altitude</div>
+                <div class="col-xs-6">
+                    <input type="text" class="form-control" name="info_dif_dst" id="info_dif_dst" placeholder="Distance" readonly>
+                </div>
+                <div class="col-xs-6">
+                    <input type="text" class="form-control" name="info_dif_alt" id="info_dif_alt" placeholder="Altitude Change" readonly>
+                </div>
+                <div class="col-xs-6">Bearing</div>
+                <div class="col-xs-6">Time</div>
+                <div class="col-xs-6">
+                    <input type="text" class="form-control" name="info_dif_bng" id="info_dif_bng" placeholder="Bearing" readonly>
+                </div>
+                <div class="col-xs-6">
+                    <input type="text" class="form-control" name="info_dif_tm" id="info_dif_tm" placeholder="Time" readonly>
+                </div>   
+                <div class="col-xs-6">Velocity (km/hr)</div>
+                <div class="col-xs-6">Climb Rate (m/hr)</div>
+                <div class="col-xs-6">
+                    <input type="text" class="form-control" name="info_dif_vel" id="info_dif_vel" placeholder="Velocity" readonly>
+                </div>
+                <div class="col-xs-6">
+                    <input type="text" class="form-control" name="info_dif_clr" id="info_dif_clr" placeholder="Climbing Rate" readonly>
+                </div>
             </div>
         </div>
         <div id="divLayers" class="modal">
             <div class="sub-header"><h3 class="text-center">Layers</h3></div>
-            <div id="info">
+            <div id="layers">
                 Layer Content
             </div>
         </div>
         <div id="divPoints" class="modal">
             <div class="sub-header"><h3 class="text-center">Points</h3></div>
-            <div id="info">
-            <div id="info">
-                Point
-            </div>
+            <div id="points">
+                Points Content
             </div>
         </div>
         <div id="divSettings" class="modal">
             <div class="sub-header"><h3 class="text-center">Settings</h3></div>
-            <div id="info">
+            <div id="settings">
                 <div class="col-xs-8">
                     <h4 class="setting-label">Autolocate: (<span id="valAutolocate">9</span>s)</h4>
                 </div>
@@ -135,9 +194,11 @@
         var objOverlays;
         var mrkCurrentLocation;
         var posCurrent;
+        var posPrevious;
         var posLastTime;
         var intAutolocate;
         var intBreadcrumbs;
+        var intInfo;
         
         $(document).ready(function(){
 
@@ -199,7 +260,14 @@
             
             setInterval(function(){
                 mymap.locate();
+                var dt=new Date();
+                var tsf=((dt-posLastTime)/1000).toFixed(0);
+                $(".time_since_fix").html(tsf);
             }, 1000);
+            
+            intInfo = setInterval(function(){
+                populateInfo();
+            },$("#numBreadcrumbs").val()*1000)
             
             mymap.on('locationfound', function(e) {
                 posCurrent=randomizePos(e);
