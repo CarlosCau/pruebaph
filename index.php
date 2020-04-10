@@ -33,7 +33,7 @@
         <script src="js/general_functions.js"></script>
         <script src="js/general_editing.js"></script>
         <script src="generic_mobile_resources/js_generic_mobile.js"></script>
-        <script src="http://maps.google.com/maps/api/js?key=AIzaSyCQQSs0dPp_21EUf6eATD97BM6e432mi_E"></script>
+        <script src="https://maps.google.com/maps/api/js?key=AIzaSyCQQSs0dPp_21EUf6eATD97BM6e432mi_E"></script>
         <script src="src/plugins/Leaflet.GoogleMutant.js"></script>
     </head>
     <body>
