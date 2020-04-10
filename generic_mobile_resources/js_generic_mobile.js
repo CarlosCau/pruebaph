@@ -44,9 +44,54 @@ function startBreadcrumbs(){
         var mrkBreadcrumb = L.circle(posCurrent.latlng, {radius:radius, color:'green'}).addTo(mymap);
         lyrBreadcrumbs.addLayer(mrkBreadcrumb);
     }, $("#numBreadcrumbs").val()*1000)
+    clearInterval(intInfo);
+    intInfo = setInterval(function(){
+        populateInfo();
+    },$("#numBreadcrumbs").val()*1000)
 }
 
 function stopBreadcrumbs(){
     $("#btnBreadcrumbs").html("Off");
     clearInterval(intBreadcrumbs);
+}
+
+function populateInfo(){
+    $(".info_cur_acc").html(posCurrent.accuracy.toFixed(1));
+    if (!posCurrent.altitude){
+        posCurrent.altitude="NA";
+    } else {
+        posCurrent.altitude=posCurrent.altitude.toFixed(1)
+    }
+    $("#info_cur_lat").val(posCurrent.latitude.toFixed(5));
+    $("#info_cur_lng").val(posCurrent.longitude.toFixed(5));
+    $("#info_cur_alt").val(posCurrent.altitude);
+    $("#info_cur_tm").val(returnTimeFromUTC(posCurrent.timestamp));
+    
+    if (posPrevious){
+        $("#info_prv_lat").val(posPrevious.latitude.toFixed(5));
+        $("#info_prv_lng").val(posPrevious.longitude.toFixed(5));
+        $("#info_prv_alt").val(posPrevious.altitude);
+        $("#info_prv_tm").val(returnTimeFromUTC(posPrevious.timestamp));
+
+        var dst=posPrevious.latlng.distanceTo(posCurrent.latlng);
+        if ((posCurrent.altitude=="NA") || (posPrevious.altitude=="NA")) {
+            var alt="NA";
+        } else {
+            var alt=posCurrent.altitude-posPrevious.altitude
+        }
+        var tm=(posCurrent.timestamp-posPrevious.timestramp)/1000
+        var bng=L.GeometryUtil.bearing(posPrevious.latlng,posCurrent.latlng)
+        if (alt=="NA"){
+            var clr="NA";
+        } else {
+            var clr=(alt/tm*60*60).toFixed(1);
+        }
+        $("#info_dif_dst").val(dst.toFixed(1));
+        $("#info_dif_alt").val(alt);
+        $("#info_dif_tm").val(tm.toFixed(1));
+        $("#info_dif_bng").val(bng.toFixed(1));
+        $("#info_dif_vel").val(((dst/tm*60*60)/1000).toFixed(3));
+        $("#info_dif_clr").val(clr);
+    }
+    posPrevious=posCurrent;
 }
