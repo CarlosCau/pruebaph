@@ -29,11 +29,24 @@
     margin-top: 20%;
 }
 
+.btn-light:hover {
+    margin-top: 20%;
+    background-color: #9c9c9c;
+    border-color: black;
+    border-width: 3px;
+}
+
 .btn-warning {
     margin-top: 10%;
 }
 
+.btn-no-top-margin{
+    margin-top: 0;
+}
 
+.table-header{
+    background-color:#c4c4c4;
+}
 
 .fa {
   color: #cf464e;
