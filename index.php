@@ -42,6 +42,8 @@
        <!-- Map screen -->
        
         <div id="divHeader" class="col-xs-12">
+           <span class="pull-left">(<span class="time_since_fix"></span>s)</span>
+           <span class="pull-right">(&plusmn; <span class="info_cur_acc"></span>m)</span>
             <div class="container p-3 my-3 bg-dark text-white">
               <h3>PERCEPCIÓN LOCAL DEL RIESGO</h3>
               <hr class="my-1">
@@ -147,9 +149,7 @@
         </div>
         <div id="divPoints" class="modal">
             <div class="sub-header"><h3 class="text-center">Points</h3></div>
-            <div id="points">
-                Points Content
-            </div>
+            <div id="points"></div>
         </div>
         <div id="divSettings" class="modal">
             <div class="sub-header"><h3 class="text-center">Settings</h3></div>
@@ -180,6 +180,21 @@
                     </div>
                     <div class="col-xs-2">60s</div>
                 </div>
+
+                <div class="col-xs-8">
+                    <h4 class="setting-label">Filter: (<span id="valFilter">30</span>m)</h4>
+                </div>
+                <div class="col-xs-4">
+                    <button id="btnFilter" class="btn btn-warning btn-block">Off</button>
+                </div>
+                <div id="sldrFilter" class="col-xs-12">
+                    <div class="col-xs-1">5m</div>
+                    <div class="col-xs-8">
+                        <input id="numFilter" type="range" min="5" max="50" step="5" value="30">
+                    </div>
+                    <div class="col-xs-2">50m</div>
+                </div>
+           
             </div>
         </div>
         
@@ -241,6 +256,7 @@
             };
 
             objOverlays = {
+                "Breadcrumbs":lyrBreadcrumbs
             };
 
             ctlLayers = L.control.layers(objBasemaps, objOverlays).addTo(mymap);
@@ -262,6 +278,9 @@
                 mymap.locate();
                 var dt=new Date();
                 var tsf=((dt-posLastTime)/1000).toFixed(0);
+                if (posPrevious) {
+                    tsf+="s, "+((dt-posPrevious.timestamp)/1000).toFixed(0);
+                }
                 $(".time_since_fix").html(tsf);
             }, 1000);
             
@@ -270,13 +289,43 @@
             },$("#numBreadcrumbs").val()*1000)
             
             mymap.on('locationfound', function(e) {
+                $(".info_cur_acc").html(e.accuracy.toFixed(0));
+                if ($("#btnFilter").html()=="On") {
+                    var flt=$("#numFilter").val();
+                } else {
+                    var flt=100000;
+                }
+                if (e.accuracy<flt){
                 posCurrent=randomizePos(e);
-                posLastTime=new Date();
+                posLastTime=new Date();   
+                } else {
+                    if(posCurrent)
+                    posCurrent.accuracy=e.accuracy;
+                }
             });
 
             mymap.on('locationerror', function(e) {
                 console.log(e);
             })
+            
+            if (localStorage.jsnSettings){
+                var jsnSettings=JSON.parse(localStorage.jsnSettings);
+                $("#btnAutolocate").html(jsnSettings.autolocate);
+                $("#numAutolocate").val(jsnSettings.numAutolocate);
+                $("#valAutolocate").html(jsnSettings.numAutolocate);
+                if (jsnSettings.autolocate=="On"){
+                    startAutolocate();
+                }
+                $("#btnBreadcrumbs").html(jsnSettings.breadcrumbs);
+                $("#numBreadcrumbs").val(jsnSettings.numBreadcrumbs);
+                $("#valBreadcrumbs").html(jsnSettings.numBreadcrumbs);
+                if (jsnSettings.breadcrumbs=="On"){
+                    startBreadcrumbs();
+                }  
+                $("#btnFilter").html(jsnSettings.filter);
+                $("#numFilter").val(jsnSettings.numFilter);
+                $("#valFilter").html(jsnSettings.numFilter);
+            }
         });
         
         $("#btnMap").click(function(){
@@ -292,6 +341,7 @@
         })
         
         $("#btnPoints").click(function(){
+            populatePoints();
             openSubScreen("divPoints");
         })
         
@@ -319,10 +369,24 @@
                 startBreadcrumbs();
             }
         });
-
         $("#numBreadcrumbs").on("change", function(){
             $("#valBreadcrumbs").html($("#numBreadcrumbs").val());
             startBreadcrumbs();
+        });
+        
+        $("#btnFilter").click(function(){
+            if ($("#btnFilter").html()=="On"){
+                $("#btnFilter").html("Off");
+                storeSettings();
+            } else {
+               $("#btnFilter").html("On");
+                storeSettings();
+            }
+        });
+
+        $("#numFilter").on("change", function(){
+            $("#valFilter").html($("#numFilter").val());
+            storeSettings();
         });
         
     </script>
