@@ -25,6 +25,10 @@
     margin-left: -10px;
 }
 
+.btn{
+    margin-top: 2px;
+}
+
 .btn-light {
     margin-top: 20%;
 }
@@ -37,7 +41,11 @@
 }
 
 .btn-warning {
-    margin-top: 10%;
+    margin-top: 5%;
+}
+
+.btn-danger {
+    margin-top: 5%;
 }
 
 .btn-no-top-margin{
@@ -54,6 +62,11 @@
 
 .container{
     z-index: 2000;
+}
+
+.fa-stop-circle{
+    margin-top: 7%;
+    padding-bottom: 5%;
 }
 
 h3{
@@ -90,8 +103,27 @@ p{
     background-color: #AF272F;
     padding: 3px;
 }
+
+.stream-controls{
+    display: none;
+    font-size: 24px;
+}
+
 .setting-label{
     margin-top: 8%;
+}
+
+.div-no-padding{
+    padding: 0;
+}
+
+#divAverage{
+    display: none;
+    color: red;
+}
+
+#mode{
+    margin-top: -5px;
 }
 
     /*    Slider */
